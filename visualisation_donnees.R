@@ -167,4 +167,20 @@ plot_groupe1_maths_toutes_annees <- function(data) {
             color = "Années"
         ) +
         theme_minimal()
+    #créer la carte des départements
+    score_departement <- data %>%
+    group_by(Code.département) %>%
+    summarise(score_moyen = mean(Score.moyen, na.rm = TRUE))
+    departements <- st_read(""C:\Users...\contours-des-departements-francais-issus-dopenstreetmap\contours-des-departements-francais-issus-dopenstreetmap.shp"")
+    head(departements)
+    map_data <- departements %>%
+    colnames(departements)
+    map_data <- departements %>%
+    left_join(score_departement, by = c("code_insee" = "Code.département"))
+    left_join(score_departement, by = c("code_insee" = "Code.département"))
+    ggplot(map_data) + 
+        geom_sf(aes(fill = score_moyen)) +  # Remplissage par score moyen
+        scale_fill_viridis_c(option = "C") +  # Palette de couleurs
+        theme_minimal() +
+        labs(title = "Carte choroplèthe des départements (Score moyen de 2017 à 2023)", fill = "Score Moyen") + theme(axis.text = element_blank(), axis.title = element_blank())
 }
